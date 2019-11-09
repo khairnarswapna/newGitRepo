@@ -1,6 +1,6 @@
 #!/bin/bash -x
-a=$((RANDOM%2));
-if [ ${a} == 1 ];
+ispresent=$((RANDOM%2));
+if [ ${ispresent} == 1 ];
 then
 echo "employee is present";
 else
