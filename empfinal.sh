@@ -1,13 +1,16 @@
-#!/bin/bash -x#!/bin/bash -x
+#!/bin/bash -x
 isfulltime=1;
 isparttime=2;
+max_hours_month=50;
 rateperhour=200;
 no_of _workingday=10;
-totalworking_hours=0;
+max_working_days=20;
+totalworkinghours=0;
 totalworkingDays=0;
 function getworking_hour()
 {
-      case $1 in $isfulltime)
+      case $1 in 
+      $isfulltime)
       workinghrs=8
       ;;
        $isparttime)
@@ -19,4 +22,24 @@ function getworking_hour()
       echo $workinghrs
       
 }
+function calculateDailywage()
+{
+   wage=$(($1*$rateperhour))
+   echo $wage
+}
+while [[ $totalworinghours -lt $max_hours_month && $totalworkingdays -lt $max_working_days ]]
+
+do 
+    ((totalworkingdays++))
+    
+
+       echo total working days $totalworkingDays 
+       workingHours="$( getworkingHrs $((RANDOM %3)) )"
+       totalworkinghours=$(($totalworkinghours + $workingHours))
+       empdailywage[$totalworkingDays]="$( calculateDailywage $workingHours )"   
+
+done 
+totalsalary="${calculateDailywage totalworkinghours }"
+echo "totalsalary" 
+echo  "empdailywage[@]" 
 
