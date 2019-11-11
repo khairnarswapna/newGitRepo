@@ -8,46 +8,52 @@
 #max_working_days=20;
 #totalworkinghours=0;
 #totalworkingDays=0;
-#function getworking_hour()
-#{
-     # case $1 in 
-     # $isfulltime)
-     # workinghrs=8
-     # ;;
-     #  $isparttime)
-     # workinghrs=4
-     # ;;
-     # *)
-     # workinghrs=0;
-     # esac
-     # echo $workinghrs
-      
-#}
-#function calculateDailywage()
-#{
-  # wage=$(($1*$rateperhour))
-  # echo $wage
-#}
-#while [[ $totalworinghours -lt $max_hours_month && $totalworkingdays -lt $max_working_days ]]
 
-#do 
-   #  ((totalworkingdays++))
-    
-
-    #   echo total working days $totalworkingDays 
-    #   workingHours="$( getworkingHrs $((RANDOM %3)) )"
-    #   totalworkinghours=$(($totalworkinghours + $workingHours))
-    #   empdailywage[$totalworkingDays]="$( calculateDailywage $workingHours )"   
-
-#done 
-#totalsalary="${calculateDailywage totalworkinghours }"
-#echo "totalsalary" 
-#echo  "empdailywage[@]" 
-
+   
 totalNoOfDays=20
 totalHours=0
 perDayWage=[]
 ratePerHour=18
+declare -A  Dailywages
+function calculations()
+{
+
+        isFullTime=1
+        isPartTime=2
+        empCheck=$((RANDOM%3))
+	case $empCheck in
+		$isFullTime)
+			hours=8;;
+		$isPartTime)
+			hours=4;;
+		*)
+			hours=0;;
+	esac
+	echo $hours
+}
+function dailyWage()
+{
+
+	wage=$(($ratePerHour*$1))
+	echo $wage
+}
+
+
+for (( day=1; day<$totalNoOfDays; day++ ))
+do
+	calchrs=" $( calculations ) "
+	#perDayWage[((counter++))]="$( dailyWage $calchrs )"
+        Dailywages["$day"]="$( dailyWage $calchrs )"       
+	totalHours=$(($totalHours+$calchrs))
+done
+echo "all dailywages" ${Dailywages[@]}
+totalSalary=$(($ratePerHour*$totalHours))
+#echo ${perDayWage[@]}
+totalNoOfDays=20
+totalHours=0
+perDayWage=[]
+ratePerHour=18
+declare -A wagePerDay
 function calculations()
 {
 	isFullTime=1
@@ -67,21 +73,35 @@ function calculations()
 
 function dailyWage()
 {
-
-	
-
 	wage=$(($ratePerHour*$1))
 	echo $wage
 }
 
+function inDictionary()
+{
+	wagePerDay[$1]=$2
+}
 
-for (( day=1; $day<$totalNoOfDays; day++ ))
+
+for (( day=1; day<=$totalNoOfDays; day++ ))
 do
 	calchrs=" $( calculations ) "
-	perDayWage[((counter++))]="$( dailyWage $calchrs )"
+	DayWage="$( dailyWage $calchrs )" 
+	perDayWage[((counter++))]=$DayWage
+	inDictionary $day $DayWage
 	totalHours=$(($totalHours+$calchrs))
+
 done
 
 
 totalSalary=$(($ratePerHour*$totalHours))
-echo ${perDayWage[@]}
+wagePerDay[TotalSalary]=$totalSalary
+
+for(( day=1; day<=20; day++ ))
+do
+	echo $day :  "${wagePerDay[$day]}"
+
+done
+
+
+echo total salary : ${wagePerDay[TotalSalary]}
